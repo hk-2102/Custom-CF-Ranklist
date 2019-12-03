@@ -195,7 +195,7 @@ def add_problem():
             cursor.commit()
             update()
         print(error)
-        return render_template('add_handle.html', error=error)
+        return render_template('add_problems.html', error=error)
     return render_template('home.html')
 
 @app.route("/problems", methods = ['GET', 'POST'])
