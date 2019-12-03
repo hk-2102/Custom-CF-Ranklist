@@ -25,10 +25,10 @@
     {%if error != "OK"%}
         {{error}}
     {%endif%}
-    <form class="form-inline" action="/add_handle" method='POST'>
+    <form class="form-inline" action="/add_problem" method='POST'>
         <div class="form-group mx-sm-3 mb-2">
-            <label class="sr-only">Codeforces Handle:</label>
-            <input type="text" class="form-control" name="handle" placeholder="Handle">
+            <label class="sr-only">Problem Name:</label>
+            <input type="text" class="form-control" name="problemName" placeholder="problemName">
         </div>
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
     </form>
