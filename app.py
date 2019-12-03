@@ -237,7 +237,7 @@ def update():
         handle = tmp.fetchone()
         if handle == None:
             break
-        #print("updating %s" %(handle[0]))
+        print("updating %s" %(handle[0]))
         cursor2.execute('''update handles set solved = 0 where handle = '%s' '''%(handle[0]))
 
     tmp = cursor.execute('''Select * from problems''')
@@ -246,7 +246,8 @@ def update():
         if problem == None:
             break
         cursor2.execute('''update problems set solved = 0 where name = '%s'; ''' %(problem[0]))
-
+        
+    print(pset)
     tmp = cursor.execute('''SELECT handle from handles''')
     while True:
         handle = tmp.fetchone()
@@ -265,7 +266,7 @@ def update():
 
             for x in probstatus:
                 if probstatus[x] == True and x in pset:
-                    #print(x)
+                    print(x)
                     qry = '''select * from problems where name = "%s" ''' %(x)
                     tmp2 = cursor2.execute(qry)
                     if tmp2.fetchone() != None:
