@@ -48,7 +48,6 @@
                     <th scope = "col">#</th>
                     <th scope = "col">Problem Name</th>
                     <th scope = "col">Rating</th>
-                    <th scope = "col">Points</th>
                     <th scope = "col">Tags</th>
                     <th scope = "col">Solved</th>
                 </tr>
@@ -59,7 +58,6 @@
                     <th scope = "row">{{i+1}}</th>
                     <td><a href = {{pdata[i][4]}} target = "_blank">{{pdata[i][0]}}</a></td>
                     <td>{{pdata[i][1]}}</td>
-                    <td>{{pdata[i][2]}}</td>
                     <td>
                         {%for j in range(0, pdata[i][3]|length)%}
                             {{pdata[i][3][j]}}
