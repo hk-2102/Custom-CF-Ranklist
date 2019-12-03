@@ -166,37 +166,37 @@ def new_problem():
     print("new here")
     return render_template('add_problems.html')
 
-@app.route("/add_problem", methods = ['GET','POST'])
-def add_problem():
-    print("adding")
-    if request.method == 'POST':
-        name = (request.form['problemName'])
-        error = "OK"
-        name = name.replace("'", "/'")
-        qry = "select * from problems where name = '%s'" %name
-        tmp = cursor1.execute(qry)
-        data = tmp.fetchone()
-        if data == None:
-            error = "Question Not Found"
-        else:
-            qry = "insert into problems values ('%s','%s',%d,%d,'%s',0)" %(data[0], data[2], data[3], data[4], data[5])
-            print(qry)
-            cursor.execute(qry)
-            qry1 = "select * from tags where problemID = '%s'"%(data[0])
-            tmp = cursor1.execute(qry1)
-            while True:
-                data = tmp.fetchone()
-                if data == None:
-                    break
-                qry2 = "insert into tags values ('%s','%s')"%(data[0], data[1])
-                print(qry2)
-                cursor.execute(qry2)
-            print(1)
-            cursor.commit()
-            update()
-        print(error)
-        return render_template('add_problems.html', error=error)
-    return render_template('home.html')
+# @app.route("/add_problem", methods = ['GET','POST'])
+# def add_problem():
+#     print("adding")
+#     if request.method == 'POST':
+#         name = (request.form['problemName'])
+#         error = "OK"
+#         name = name.replace("'", "/'")
+#         qry = "select * from problems where name = '%s'" %name
+#         tmp = cursor1.execute(qry)
+#         data = tmp.fetchone()
+#         if data == None:
+#             error = "Question Not Found"
+#         else:
+#             qry = "insert into problems values ('%s','%s',%d,%d,'%s',0)" %(data[0], data[2], data[3], data[4], data[5])
+#             print(qry)
+#             cursor.execute(qry)
+#             qry1 = "select * from tags where problemID = '%s'"%(data[0])
+#             tmp = cursor1.execute(qry1)
+#             while True:
+#                 data = tmp.fetchone()
+#                 if data == None:
+#                     break
+#                 qry2 = "insert into tags values ('%s','%s')"%(data[0], data[1])
+#                 print(qry2)
+#                 cursor.execute(qry2)
+#             print(1)
+#             cursor.commit()
+#             update()
+#         print(error)
+#         return render_template('add_problems.html', error=error)
+#     return render_template('home.html')
 
 @app.route("/problems", methods = ['GET', 'POST'])
 def show_problems():
@@ -222,7 +222,7 @@ def show_problems():
         block.append(data[4])
         block.append(data[5])
         pdata.append(block)
-    pdata.sort(key = lambda x:x[5])
+    pdata.sort(key = lambda x:x[5], reverse = True)
     return render_template('problems.html', pdata = pdata)
 
 def update():
