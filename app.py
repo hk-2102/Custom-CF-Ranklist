@@ -158,7 +158,7 @@ def show_handles():
         link = "https://codeforces.com/profile/" + data[0]
         block.append(link)
         ranklist.append(block)
-    ranklist.sort(key = lambda x : x[2])
+    ranklist.sort(key = lambda x : x[2], reverse = True)
     return render_template('home.html', ranklist = ranklist)
 
 @app.route("/add_problem")
