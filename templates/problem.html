@@ -31,7 +31,16 @@
     </head>
     <body>
         <nav class="navbar navbar-light bg-light justify-content-between">
-            <a class="navbar-brand"><center>Problems</center></a>
+            <a class="navbar-brand">Winter Of CP</a>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" onkeyup="myFunction()" type="search" placeholder="Search" aria-label="Search" id ="search">
+            </form>
+            <form class="form-inline" action="/">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ranklist</button>
+            </form>
+            <form class="form-inline" action="/problems">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Problems</button>
+            </form>
         </nav>
         <table class="table table-dark" id = "problems">
             <thead>
