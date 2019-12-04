@@ -234,13 +234,11 @@ def update():
         if pname == None:
             break
         pset.append(pname[1])
-    print(pset)
     tmp = cursor.execute('''SELECT * from handles''')
     while True:
         handle = tmp.fetchone()
         if handle == None:
             break
-        print("updating %s" %(handle[0]))
         cursor2.execute('''update handles set solved = 0 where handle = '%s' '''%(handle[0]))
 
     tmp = cursor.execute('''Select * from problems''')
@@ -250,8 +248,7 @@ def update():
             break
         cursor2.execute('''update problems set solved = 0 where name = '%s'; ''' %(problem[1]))
         
-    print(pset)
-    tmp = cursor.execute('''SELECT handle from handles''')
+   tmp = cursor.execute('''SELECT handle from handles''')
     while True:
         handle = tmp.fetchone()
         probstatus = dict()
