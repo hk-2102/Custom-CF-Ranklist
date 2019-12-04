@@ -248,7 +248,7 @@ def update():
             break
         cursor2.execute('''update problems set solved = 0 where name = '%s'; ''' %(problem[1]))
         
-   tmp = cursor.execute('''SELECT handle from handles''')
+    tmp = cursor.execute('''SELECT handle from handles''')
     while True:
         handle = tmp.fetchone()
         probstatus = dict()
