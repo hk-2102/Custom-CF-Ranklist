@@ -1,35 +1,111 @@
-import requests,schedule,sqlite3,json
-from operator import itemgetter
-from flask import Flask,render_template,session,request,redirect,url_for,flash
-import os
-import multiprocessing
-import time
+import requests, bs4, json
+import os,subprocess
+import sqlite3,schedule,time
 
-app = Flask(__name__)
+cursor = sqlite3.connect('ranklist.db',check_same_thread=False)
 
-cursor = sqlite3.connect('all_problems.db',check_same_thread=False)
+cursor2 = sqlite3.connect('ranklist.db',check_same_thread=False)
 
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS problems(
-        ProblemID varchar(10) PRIMARY KEY,
-        problemsetName varchar(255),
-        name varchar(255),
-        rating int,
-        points int,
-        link varchar(255)
-    );
-''')
+def update():
+    print("updating")
+    pset = []
+    tmp3 = cursor.execute('''Select * from problems''')
+    while True:
+        pname = tmp3.fetchone()
+        if pname == None:
+            break
+        pset.append(pname[1])
+    tmp = cursor.execute('''SELECT * from handles''')
+    while True:
+        handle = tmp.fetchone()
+        if handle == None:
+            break
+        cursor2.execute('''update handles set solved = 0 where handle = '%s' '''%(handle[0]))
 
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS tags(
-        ProblemID varchar(10),
-        tags varchar(255)
-    );
-''')
+    tmp = cursor.execute('''Select * from problems''')
+    while True:
+        problem = tmp.fetchone()
+        if problem == None:
+            break
+        cursor2.execute('''update problems set solved = 0 where name = '%s'; ''' %(problem[1]))
+        
+    tmp = cursor.execute('''SELECT handle from handles''')
+    while True:
+        handle = tmp.fetchone()
+        probstatus = dict()
+        if handle == None:
+            break
+        try:
+            url = "https://codeforces.com/api/user.status?handle=%s" %(handle[0])
+            sub1 = requests.get(url)
+            sub = json.loads(sub1.text)
+            if sub['status'] != "OK":
+                continue
+            for stat in sub['result']:
+                if stat['verdict'] == "OK":
+                    probstatus[stat['problem']['name']] = True
 
-qry = "select * from problems where name like 'New%'"
-tmp = cursor.execute(qry)
+            for x in probstatus:
+                if probstatus[x] == True and x in pset:
+                    qry = '''select * from problems where name = "%s" ''' %(x)
+                    tmp2 = cursor2.execute(qry)
+                    if tmp2.fetchone() != None:
+                        try:
+                            qry = '''update handles set solved = solved+1 where handle = "%s" ''' %(handle[0])
+                            cursor2.execute(qry)
+                        except:
+                            print("not possible here")
+                        try:
+                            qry = '''update problems set solved = solved+1 where name = "%s" ''' %(x)
+                            cursor2.execute(qry)
+                        except:
+                            print("not possible here")
+            print("done %s" %(handle))
+        except:
+            print("skipping %s" %(handle))
 
-for i in range(0, 1):
-    problem = tmp.fetchone()
-    print(problem)
+    cursor.commit()
+    cursor2.commit()
+    print("done update")
+
+def work():
+    response = requests.get('http://iitindoreranklist.herokuapp.com/?')
+    souped = bs4.BeautifulSoup(response.text)
+
+    handle_elements = souped.select('#handle')
+    handles = []
+
+    for element in handle_elements:
+        handles.append(element.getText())
+
+    for handle in handles:
+        url = "https://codeforces.com/api/user.info?handles=%s" %handle
+        temp = requests.get(url)
+        obj = json.loads(temp.text)
+        handle = handle.replace("'", "/'")
+        qry = "select * from handles where handle = '%s'" %handle
+        tmp = cursor.execute(qry)
+        if tmp.fetchone() != None:
+            print(handle + " already registered")
+        else:
+            data = obj['result'][0]
+            rating = 0
+            if  'rating' in data:
+                rating = data['rating']
+            qry = "insert into handles values ('%s',%d,0)" %(handle, rating)
+            print(handle)
+            cursor.execute(qry)
+            cursor.commit()
+    print(handles)
+    print(len(handles))
+
+    qry = "select * from handles"
+    tmp = cursor.execute(qry)
+
+    tmp = tmp.fetchall()
+
+    print(tmp)
+
+
+work()
+update()
