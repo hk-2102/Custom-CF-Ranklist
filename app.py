@@ -162,7 +162,26 @@ def show_handles():
         block.append(link)
         ranklist.append(block)
     ranklist.sort(key = lambda x : x[2], reverse = True)
-    return render_template('home.html', ranklist = ranklist)
+    return render_template('home.html', ranklist = ranklist, f = 0)
+
+@app.route("/ranklist_sortbyrating", methods = ['GET', 'POST'])
+def show_handles_byrating():
+    tmp = cursor.execute('''select * from handles''')
+    ranklist = []
+    while True:
+        data = tmp.fetchone()
+        if data == None:
+            break
+        print(data)
+        block = []
+        block.append(data[0])
+        block.append(data[1])
+        block.append(data[2])
+        link = "https://codeforces.com/profile/" + data[0]
+        block.append(link)
+        ranklist.append(block)
+    ranklist.sort(key = lambda x : x[1], reverse = True)
+    return render_template('home.html', ranklist = ranklist, f = 1)
 
 @app.route("/add_problem")
 def new_problem():
