@@ -131,8 +131,8 @@ def add():
                     error = "Set Organization = IIT Indore in Codeforces Profile"
                 else:
                     rating = 0
-                    if 'rating' in data:
-                        rating = data['rating']
+                    if 'maxRating' in data:
+                        rating = data['maxRating']
                     qry = "insert into handles values ('%s',%d,0)" %(handle, rating)
                     print(qry)
                     cursor.execute(qry)
