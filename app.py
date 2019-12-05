@@ -130,7 +130,10 @@ def add():
                 elif data['organization'] != "IIT Indore":
                     error = "Set Organization = IIT Indore in Codeforces Profile"
                 else:
-                    qry = "insert into handles values ('%s',%d,0)" %(handle, data['rating'])
+                    rating = 0
+                    if 'rating' in data:
+                        rating = data['rating']
+                    qry = "insert into handles values ('%s',%d,0)" %(handle, rating)
                     print(qry)
                     cursor.execute(qry)
                     print(1)
