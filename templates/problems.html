@@ -27,7 +27,7 @@
                     tr[i].style.display = "none";
                     }
                 }
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
                 if (td) {
                     txtValue = td.textContent || td.innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1 || found == 1) {
@@ -58,7 +58,11 @@
                 <tr>
                     <th scope = "col">#</th>
                     <th scope = "col">Problem Name</th>
-                    <th scope = "col">Rating</th>
+                    {%if f == 1%}}
+                    <th scope = "col"><a href = "/problems">Rating</a></th>
+                    {%else%}
+                    <th scope = "col"><a href = "/problems_sortbyrating">Rating</a></th>
+                    {%endif%}
                     <th scope = "col">Tags</th>
                     <th scope = "col">Solved</th>
                 </tr>
