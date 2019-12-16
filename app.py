@@ -274,6 +274,54 @@ def show_problems_byrating():
     pdata.sort(key = lambda x:x[1])
     return render_template('problems.html', pdata = pdata, f = 1)
 
+@app.route("/see_them_all/<string:handle>")
+def show_them_all(handle):
+    try:
+        pset = []
+        qry = "select * from problems"
+        tmp = cursor.execute(qry)
+        while True:
+            x = tmp.fetchone()
+            if x == None:
+                break
+            pset.append(x[1])
+
+        url = "https://codeforces.com/api/user.status?handle=%s"%(handle) 
+        sub1 = requests.get(url)
+        sub = json.loads(sub1.text)
+        # print(pset)
+        cnt = 0
+        cur = 0
+        here = 0
+        submit = []
+        for x in sub['result']:
+            y = []
+            print(here)
+            here = here+1
+            if 'contestId' not in x:
+                continue
+            name = x['problem']['name']
+            contestId = x['contestId']
+            id = x['id']
+            verdict = x['verdict']  
+            link = "https://codeforces.com/contest/%s/submission/%s"%(contestId, id)
+            if name in pset:
+                # print("%s %s %s %s"%(id, name, link, verdict))
+                cnt = cnt+1
+                if verdict == "OK":
+                    cur = cur+1
+                y.append(id)
+                y.append(name)
+                y.append(link)
+                y.append(verdict)
+                submit.append(y)
+        print(cnt)
+        print(cur)
+        return render_template('see_them_all.html', handle=handle, submit = submit)
+    except:
+        e = Exception
+        return(str(e))
+
 def update():
     print("updating")
     pset = []
