@@ -245,7 +245,34 @@ def show_problems():
         block.append(data[5])
         pdata.append(block)
     pdata.sort(key = lambda x:x[5], reverse = True)
-    return render_template('problems.html', pdata = pdata)
+    return render_template('problems.html', pdata = pdata, f = 0)
+
+@app.route("/problems_sortbyrating", methods = ['GET', 'POST'])
+def show_problems_byrating():
+    tmp = cursor.execute('''select * from problems''')
+    pdata = []
+    while True:
+        data = tmp.fetchone()
+        block = []
+        if data == None:
+            break
+        block.append(data[1])
+        block.append(data[2])
+        block.append(data[3])
+        tags = []
+        qry = "select tags from tags where ProblemID = '%s'" %data[0]
+        tmp1 = cursor.execute(qry)
+        while True:
+            tag = tmp1.fetchone()
+            if tag == None:
+                break
+            tags.append(tag[0])
+        block.append(tags)
+        block.append(data[4])
+        block.append(data[5])
+        pdata.append(block)
+    pdata.sort(key = lambda x:x[1])
+    return render_template('problems.html', pdata = pdata, f = 1)
 
 def update():
     print("updating")
