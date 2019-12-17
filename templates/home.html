@@ -65,7 +65,7 @@
                 {%for i in range(0,ranklist|length)%}
                 <tr>
                     <th scope = "row">{{i+1}}</th>
-                    <td><a href = {{ranklist[i][3]}} target = "_blank">{{ranklist[i][0]}}</a></td>
+                    <td><a href = {{ranklist[i][3]}} target = "_blank" id = "handle">{{ranklist[i][0]}}</a></td>
                     <td id = "rating">{{ranklist[i][1]}}</td>
                     <td><a href = "/see_them_all/{{ranklist[i][0]}}">{{ranklist[i][2]}}</a></td>
                 </tr>
